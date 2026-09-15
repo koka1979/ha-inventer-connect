@@ -1,0 +1,100 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Regler auswählen",
+        "description": "Wähle den inVENTer-Regler aus, der hinzugefügt werden soll.",
+        "data": {
+          "address": "Regler"
+        }
+      },
+      "pin": {
+        "title": "PIN eingeben",
+        "description": "Gib die PIN ein, die in der Anleitung von {name} steht.",
+        "data": {
+          "pin": "PIN",
+          "zone": "Zone"
+        },
+        "data_description": {
+          "zone": "Welche Lüftungszone dieser Eintrag steuert. Zone 0 ist die erste Zone."
+        }
+      },
+      "reauth_confirm": {
+        "title": "PIN erneut eingeben",
+        "description": "{name} hat die gespeicherte PIN abgelehnt. Gib sie noch einmal ein.",
+        "data": {
+          "pin": "PIN"
+        }
+      }
+    },
+    "error": {
+      "invalid_pin": "Der Regler hat diese PIN abgelehnt.",
+      "cannot_connect": "Der Regler ist nicht erreichbar. Prüfe, ob er in Reichweite eines Adapters oder Bluetooth-Proxys ist."
+    },
+    "abort": {
+      "already_configured": "Dieser Regler ist bereits eingerichtet.",
+      "no_devices_found": "Kein inVENTer-Regler in der Nähe gefunden.",
+      "reauth_successful": "Die PIN wurde aktualisiert."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "keep_connected": "Bluetooth-Verbindung dauerhaft halten"
+        },
+        "data_description": {
+          "keep_connected": "Schnellere Befehle, aber die inVENTer-App kann sich nicht verbinden, solange Home Assistant die Verbindung hält."
+        }
+      }
+    }
+  },
+  "entity": {
+    "fan": {
+      "ventilation": {
+        "name": "Lüftung"
+      }
+    },
+    "sensor": {
+      "indoor_temperature": {
+        "name": "Innentemperatur"
+      },
+      "indoor_humidity": {
+        "name": "Luftfeuchte innen"
+      },
+      "outdoor_temperature": {
+        "name": "Außentemperatur"
+      },
+      "outdoor_humidity": {
+        "name": "Luftfeuchte außen"
+      },
+      "carbon_dioxide": {
+        "name": "CO2"
+      },
+      "volatile_organic_compounds": {
+        "name": "VOC"
+      },
+      "fan_speed": {
+        "name": "Lüfterstufe"
+      },
+      "override_remaining": {
+        "name": "Restzeit Übersteuerung"
+      }
+    },
+    "binary_sensor": {
+      "boost_active": {
+        "name": "Boost aktiv"
+      },
+      "pause_active": {
+        "name": "Pause aktiv"
+      },
+      "timer_active": {
+        "name": "Timer aktiv"
+      },
+      "global_command": {
+        "name": "Globaler Befehl aktiv"
+      }
+    }
+  }
+}

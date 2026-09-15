@@ -1,0 +1,100 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Select controller",
+        "description": "Pick the inVENTer controller to add.",
+        "data": {
+          "address": "Controller"
+        }
+      },
+      "pin": {
+        "title": "Enter PIN",
+        "description": "Enter the PIN printed in the manual of {name}.",
+        "data": {
+          "pin": "PIN",
+          "zone": "Zone"
+        },
+        "data_description": {
+          "zone": "Which ventilation zone this entry controls. Zone 0 is the first zone."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-enter PIN",
+        "description": "{name} rejected the stored PIN. Enter it again.",
+        "data": {
+          "pin": "PIN"
+        }
+      }
+    },
+    "error": {
+      "invalid_pin": "The controller rejected this PIN.",
+      "cannot_connect": "Could not reach the controller. Make sure it is in range of an adapter or Bluetooth proxy."
+    },
+    "abort": {
+      "already_configured": "This controller is already configured.",
+      "no_devices_found": "No inVENTer controller found nearby.",
+      "reauth_successful": "The PIN was updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "keep_connected": "Hold the Bluetooth connection open"
+        },
+        "data_description": {
+          "keep_connected": "Faster commands, but the inVENTer app cannot connect while Home Assistant holds the link."
+        }
+      }
+    }
+  },
+  "entity": {
+    "fan": {
+      "ventilation": {
+        "name": "Ventilation"
+      }
+    },
+    "sensor": {
+      "indoor_temperature": {
+        "name": "Indoor temperature"
+      },
+      "indoor_humidity": {
+        "name": "Indoor humidity"
+      },
+      "outdoor_temperature": {
+        "name": "Outdoor temperature"
+      },
+      "outdoor_humidity": {
+        "name": "Outdoor humidity"
+      },
+      "carbon_dioxide": {
+        "name": "CO2"
+      },
+      "volatile_organic_compounds": {
+        "name": "VOC"
+      },
+      "fan_speed": {
+        "name": "Fan speed"
+      },
+      "override_remaining": {
+        "name": "Override remaining"
+      }
+    },
+    "binary_sensor": {
+      "boost_active": {
+        "name": "Boost active"
+      },
+      "pause_active": {
+        "name": "Pause active"
+      },
+      "timer_active": {
+        "name": "Timer active"
+      },
+      "global_command": {
+        "name": "Global command active"
+      }
+    }
+  }
+}
