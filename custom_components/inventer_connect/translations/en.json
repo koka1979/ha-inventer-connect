@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "title": "Select controller",
-        "description": "Pick the inVENTer controller to add.",
+        "description": "Pick the controller. Every reachable Bluetooth device is listed, because a controller does not always advertise what it is — likely matches are marked.",
         "data": {
           "address": "Controller"
         }
@@ -26,15 +26,23 @@
         "data": {
           "pin": "PIN"
         }
+      },
+      "manual": {
+        "title": "Enter address",
+        "description": "Enter the controller's Bluetooth address, for example AA:BB:CC:DD:EE:FF.",
+        "data": {
+          "address": "Bluetooth address"
+        }
       }
     },
     "error": {
       "invalid_pin": "The controller rejected this PIN.",
-      "cannot_connect": "Could not reach the controller. Make sure it is in range of an adapter or Bluetooth proxy."
+      "cannot_connect": "Could not reach the controller. Make sure it is in range of an adapter or Bluetooth proxy.",
+      "invalid_address": "That is not a valid Bluetooth address."
     },
     "abort": {
       "already_configured": "This controller is already configured.",
-      "no_devices_found": "No inVENTer controller found nearby.",
+      "no_devices_found": "No Bluetooth device is reachable. Check that an adapter or Bluetooth proxy is in range of the controller.",
       "reauth_successful": "The PIN was updated."
     }
   },

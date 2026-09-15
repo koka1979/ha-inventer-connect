@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "title": "Regler auswählen",
-        "description": "Wähle den inVENTer-Regler aus, der hinzugefügt werden soll.",
+        "description": "Wähle den Regler. Es werden alle erreichbaren Bluetooth-Geräte gelistet, weil ein Regler nicht immer mitsendet, was er ist — wahrscheinliche Treffer sind markiert.",
         "data": {
           "address": "Regler"
         }
@@ -26,15 +26,23 @@
         "data": {
           "pin": "PIN"
         }
+      },
+      "manual": {
+        "title": "Adresse eingeben",
+        "description": "Gib die Bluetooth-Adresse des Reglers ein, zum Beispiel AA:BB:CC:DD:EE:FF.",
+        "data": {
+          "address": "Bluetooth-Adresse"
+        }
       }
     },
     "error": {
       "invalid_pin": "Der Regler hat diese PIN abgelehnt.",
-      "cannot_connect": "Der Regler ist nicht erreichbar. Prüfe, ob er in Reichweite eines Adapters oder Bluetooth-Proxys ist."
+      "cannot_connect": "Der Regler ist nicht erreichbar. Prüfe, ob er in Reichweite eines Adapters oder Bluetooth-Proxys ist.",
+      "invalid_address": "Das ist keine gültige Bluetooth-Adresse."
     },
     "abort": {
       "already_configured": "Dieser Regler ist bereits eingerichtet.",
-      "no_devices_found": "Kein inVENTer-Regler in der Nähe gefunden.",
+      "no_devices_found": "Es ist kein Bluetooth-Gerät erreichbar. Prüfe, ob ein Adapter oder Bluetooth-Proxy in Reichweite des Reglers ist.",
       "reauth_successful": "Die PIN wurde aktualisiert."
     }
   },

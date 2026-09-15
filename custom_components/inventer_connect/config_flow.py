@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from collections.abc import Mapping
 from typing import Any
 
@@ -39,6 +40,11 @@ PIN_SCHEMA = vol.Schema(
 
 REAUTH_SCHEMA = vol.Schema({vol.Required(CONF_PIN): cv.positive_int})
 
+#: Sentinel option that routes to the manual-address step.
+MANUAL_ADDRESS = "__manual__"
+
+MAC_PATTERN = re.compile(r"^([0-9A-F]{2}:){5}[0-9A-F]{2}$")
+
 
 class InventerConfigFlow(ConfigFlow, domain=DOMAIN):
     """Pick a controller, then verify the PIN printed in its manual."""
@@ -66,27 +72,81 @@ class InventerConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Let the user choose among nearby controllers."""
+        """Let the user pick from everything nearby, or type an address.
+
+        Deliberately does not filter to devices whose advertisement carries the
+        connection service: plenty of peripherals advertise only a name, and
+        the controller's services may only be visible after connecting. Hiding
+        those would leave no way to add the device at all. Likely controllers
+        are listed first; the PIN step is what actually proves compatibility.
+        """
         if user_input is not None:
-            self._address = user_input[CONF_ADDRESS]
+            address = user_input[CONF_ADDRESS]
+            if address == MANUAL_ADDRESS:
+                return await self.async_step_manual()
+            self._address = address
             await self.async_set_unique_id(self._address, raise_on_progress=False)
             self._abort_if_unique_id_configured()
             return await self.async_step_pin()
 
-        candidates = {
-            info.address: f"{info.name or 'inVENTer'} ({info.address})"
+        configured = {entry.data.get(CONF_ADDRESS) for entry in self._async_current_entries()}
+        discovered = [
+            info
             for info in async_discovered_service_info(self.hass, connectable=True)
-            if self._looks_like_controller(info)
-        }
-        for entry in self._async_current_entries():
-            candidates.pop(entry.data.get(CONF_ADDRESS), None)
+            if info.address not in configured
+        ]
+        # Likely controllers first, then everything else by name.
+        discovered.sort(key=lambda info: (not self._looks_like_controller(info),
+                                          (info.name or "").lower()))
 
-        if not candidates:
-            return self.async_abort(reason="no_devices_found")
+        _LOGGER.debug(
+            "Bluetooth devices visible to this flow: %s",
+            [(info.address, info.name, sorted(info.service_uuids)) for info in discovered]
+            or "none",
+        )
+
+        if not discovered:
+            return await self.async_step_manual()
+
+        candidates = {
+            info.address: (
+                f"{info.name or 'unnamed'} ({info.address})"
+                + (" — looks like an inVENTer controller"
+                   if self._looks_like_controller(info) else "")
+            )
+            for info in discovered
+        }
+        candidates[MANUAL_ADDRESS] = "Enter a Bluetooth address manually"
 
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema({vol.Required(CONF_ADDRESS): vol.In(candidates)}),
+        )
+
+    async def async_step_manual(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Accept a Bluetooth address typed by hand.
+
+        The fallback for a controller that never advertises, or that only a
+        proxy out of range would have seen.
+        """
+        errors: dict[str, str] = {}
+
+        if user_input is not None:
+            address = user_input[CONF_ADDRESS].strip().upper()
+            if not MAC_PATTERN.match(address):
+                errors[CONF_ADDRESS] = "invalid_address"
+            else:
+                self._address = address
+                await self.async_set_unique_id(address, raise_on_progress=False)
+                self._abort_if_unique_id_configured()
+                return await self.async_step_pin()
+
+        return self.async_show_form(
+            step_id="manual",
+            data_schema=vol.Schema({vol.Required(CONF_ADDRESS): str}),
+            errors=errors,
         )
 
     # --- PIN verification ---------------------------------------------------
